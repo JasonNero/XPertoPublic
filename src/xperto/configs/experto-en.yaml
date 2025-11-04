@@ -1,0 +1,31 @@
+bot:
+  language: "EN"
+  assistant_names:
+    - "Experto"
+    - "Experte"
+    - "Expertin"
+    - "Expert"
+  idle_timeout_secs: 1800
+  keepalive_timeout_secs: 30
+
+prompts:
+  persona: "src/xperto/prompts/Experto_EN.md"
+  intro: "src/xperto/prompts/intro_EN.md"
+
+paths:
+  recordings: "~/.xperto/recordings"
+  transcripts: "~/.xperto/transcripts"
+  contexts: "~/.xperto/contexts"
+
+services:
+  stt:
+    provider: "speechmatics"
+    model: ""
+  llm:
+    provider: "openai"
+    model: "gpt-4.1"
+    tools: ["web_search", "web_fetch"]
+  tts:
+    provider: "deepgram"
+    model: "aura-helios-en"
+    voice: "aura-helios-en"

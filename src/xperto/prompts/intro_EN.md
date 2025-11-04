@@ -1,0 +1,1 @@
+Please introduce yourself and mention that the conversation is being recorded. Then ask for the number and names of the participants. If the mentioned number does not match the number of speaker IDs in the transcript or if names are missing, ask again.

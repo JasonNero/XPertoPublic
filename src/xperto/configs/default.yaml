@@ -1,0 +1,36 @@
+bot:
+  language: "DE"
+  # Which names to look for in the wake phrase detection.
+  # This should include common mis-transcriptions.
+  assistant_names:
+    - "Experto"
+    - "Experte"
+    - "Expertin"
+    - "Expert"
+  # Idle timeout after which the pipeline/bot stops
+  idle_timeout_secs: 1800
+  # Timeout for transitioning from wake to sleep
+  keepalive_timeout_secs: 30
+
+prompts:
+  persona: "src/xperto/prompts/Experto_DE.md"  # The persona of the bot.
+  intro: "src/xperto/prompts/intro_DE.md"  # The first message to the bot.
+
+paths:
+  # Save paths for the outputs of the bot.
+  recordings: "~/.xperto/recordings"
+  transcripts: "~/.xperto/transcripts"
+  contexts: "~/.xperto/contexts"
+
+services:
+  stt:
+    provider: "speechmatics"
+    model: ""
+  llm:
+    provider: "openai"
+    model: "gpt-4.1"
+    tools: ["web_search", "web_fetch"]
+  tts:
+    provider: "elevenlabs"
+    model: "eleven_flash_v2_5"
+    voice: "kaGxVtjLwllv1bi2GFag"
