@@ -33,7 +33,7 @@ For use with Daily.co online meeting rooms, sync via `uv sync --extra daily` and
 ### Environment Variables
 
 XPerto requires API keys for various services. 
-To get them please register on their respective websites and follow their docs.
+To get them, please register on their respective websites and follow their docs.
 Then copy `.env.example` to `.env` and fill in your keys:
 
 
