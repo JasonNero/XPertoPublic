@@ -26,6 +26,10 @@ Based on [Pipecat](https://www.github.com/pipecat-ai/pipecat), powered by Daily.
 4. **WSL**: Restart your WSL terminal or run `source ~/.bashrc`
 5. **WSL**: Test the audio setup by running `pactl list sources short`, you should see at least two audio devices listed. If no audio devices are found, restart the Pulse Audio service on Windows (or reboot your PC) and try again.
 
+It might be necessary to allow microphone access to the terminal app in Windows Settings:
+- Open **Settings** > **Privacy & security** > **Microphone**
+- Make sure **Microphone access** is turned **On** and the terminal app you are using (e.g. Windows Terminal, Ubuntu) has access as well.
+
 Further troubleshooting tips (and the source for the steps above) can be found here: 
 [Microsoft/WSL Discussion Question: Is it possible to run pyaudio on Ubuntu 22.04 under WSL2 with Windows 11? #9624](https://github.com/microsoft/WSL/discussions/9624#discussioncomment-12587731)
 
