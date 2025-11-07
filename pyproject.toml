@@ -10,6 +10,7 @@ dependencies = [
     "html2text>=2025.4.15",
     "pipecat-ai-tail>=0.0.1",
     "pipecat-ai[deepgram,elevenlabs,local-smart-turn,silero,speechmatics]>=0.0.84",
+    "pipecat-ai[daily]>=0.0.84 ; platform_system != 'Windows'",
     "pyaudio>=0.2.14",
     "pydantic-settings>=2.9.1",
     "pydantic>=2.10.6",
@@ -27,9 +28,4 @@ build-backend = "hatchling.build"
 [dependency-groups]
 dev = [
     "ipykernel>=6.29.5",
-]
-
-[project.optional-dependencies]
-daily = [
-    "pipecat-ai[daily]>=0.0.84",
 ]

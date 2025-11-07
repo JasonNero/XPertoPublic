@@ -7,28 +7,46 @@ Based on [Pipecat](https://www.github.com/pipecat-ai/pipecat), powered by Daily.
 ## Quick Start
 
 > [!NOTE]
-> This project was developed on WSL/Linux and we recommend to also install it that way. 
-> However, it also works on Windows but you might experience some hiccups (e.g. slow UI, audio bugs, freezing instead of exiting the bot).
+> This project was developed on WSL2/Linux and we recommend to also install it that way. 
+> It also works on Windows but you won't be able to use Daily.co (for now), instead you'll have to run it locally. Also you might experience some hiccups (e.g. slow UI, audio bugs, longer startup and shutdown times).
 
-Pre-requisites: having [`git`](https://git-scm.com/downloads) and [`uv`](https://docs.astral.sh/uv/getting-started/installation/) installed.
+**Pre-requisites**: 
+- having [`git`](https://git-scm.com/downloads) and [`uv`](https://docs.astral.sh/uv/getting-started/installation/) installed
+- having [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install) installed (recommended) or running on Windows/Linux/MacOS directly
 
-1. Clone this repository via `git clone https://github.com/JasonNero/xperto`
-2. Setup your environment variables in a `.env` file (see below)
+### WSL2 Setup
+
+1. **Windows**: install Pulse Audio using the "Full Installer" from this URL: https://pgaskin.net/pulseaudio-win32/
+2. **WSL**: run `sudo apt install build-essential libasound2-plugins portaudio19-dev libportaudio2` to install the required libraries
+3. **WSL**: configure the pulse audio server by appending the following lines to your `~/.bashrc` file e.g. by running `code ~/.bashrc`:
+    ```bash
+    export HOST_IP="$(ip route |awk '/^default/{print $3}')"
+    export PULSE_SERVER="tcp:$HOST_IP"
+    ```
+4. **WSL**: Restart your WSL terminal or run `source ~/.bashrc`
+5. **WSL**: Test the audio setup by running `pactl list sources short`, you should see at least two audio devices listed. If no audio devices are found, restart the Pulse Audio service on Windows (or reboot your PC) and try again.
+
+Further troubleshooting tips (and the source for the steps above) can be found here: 
+[Microsoft/WSL Discussion Question: Is it possible to run pyaudio on Ubuntu 22.04 under WSL2 with Windows 11? #9624](https://github.com/microsoft/WSL/discussions/9624#discussioncomment-12587731)
+
+### XPerto Installation
+
+1. Clone this repository via `git clone https://github.com/JasonNero/XPertoPublic`
+2. Setup your environment variables by copying `.env.example` to `.env` and filling in your API keys (see below)
 3. Install dependencies with `uv sync`
-4. Run the app with `uv run bot` (on Windows: `uv run -m src.xperto.runner`)
 
-To specify a custom bot configuration use `--config <path>`. 
+> [!NOTE]
+> To run the bot locally (without Daily.co): `uv run bot`
+>
+> To run the bot in a Daily.co meeting room: `uv run bot --transport daily`
+
+To specify a custom bot configuration you can append `--config <path>`. 
 Currently there are example configurations in the `src/xperto/configs` folder:
 - `default.yaml` - Main German bot with Speechmatics and ElevenLabs
 - `experto-en.yaml` - English version with Speechmatics and Deepgram TTS
-- `connectival.yaml` - Connectival demo configuration
+- `connectival.yaml` - HdM Connectival demo configuration
 
-For use with Daily.co online meeting rooms, sync via `uv sync --extra daily` and run with the `--transport daily` flag.
-
-> [!NOTE]
-> If you want to switch from Speechmatics SST to Deepgram STT, you'll need to use [my fork of pipecat](https://github.com/JasonNero/pipecat/tree/feat/userid-in-llm-context-rebased2) instead of the main repo, as it contains some fixups to propagate user/diarization IDs to the LLM context.
-
-## Configuration
+## XPerto Configuration
 
 ### Environment Variables
 
@@ -36,11 +54,10 @@ XPerto requires API keys for various services.
 To get them, please register on their respective websites and follow their docs.
 Then copy `.env.example` to `.env` and fill in your keys:
 
-
 ```bash
 # Transport (only needed for Daily.co deployments)
-# DAILY_SAMPLE_ROOM_URL=https://your-room.daily.co/room-name
-# DAILY_API_KEY=your-daily-api-key
+DAILY_SAMPLE_ROOM_URL=https://your-room.daily.co/room-name
+DAILY_API_KEY=your-daily-api-key
 
 # Speech-to-Text (choose one or both)
 SPEECHMATICS_API_KEY=your-speechmatics-key
@@ -91,8 +108,8 @@ paths:
 services:
   # Speech-to-Text configuration
   stt:
-    provider: "speechmatics"  # Options: "deepgram" or "speechmatics"
-    model: ""  # For Deepgram; leave empty for Speechmatics
+    provider: "speechmatics"  # Options: "speechmatics"
+    model: ""  # leave empty for Speechmatics
 
   # Large Language Model configuration
   llm:
@@ -112,16 +129,8 @@ services:
 
 4. **Run your bot**:
 ```bash
+# by name
 uv run bot --config my-bot
 # or with full path:
 uv run bot --config src/xperto/configs/my-bot.yaml
 ```
-
-## Troubleshooting
-
-### Using local transport on WSL2
-
-Local transport on WSL2 can be a bit finicky. Here are some notes on what "works on my machine" (TM):
-
-- Install Pulse Audio from https://pgaskin.net/pulseaudio-win32/
-- Occasionally requires restarting the Pulse service and/or the WSL2 instance
