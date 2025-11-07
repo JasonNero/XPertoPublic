@@ -18,9 +18,9 @@ prompts:
 
 paths:
   # Save paths for the outputs of the bot.
-  recordings: "~/.xperto/recordings"
-  transcripts: "~/.xperto/transcripts"
-  contexts: "~/.xperto/contexts"
+  recordings: "outputs/recordings"
+  transcripts: "outputs/transcripts"
+  contexts: "outputs/contexts"
 
 services:
   stt:

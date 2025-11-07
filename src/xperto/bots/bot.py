@@ -71,7 +71,11 @@ class SimpleBot:
 
         @llm.event_handler("on_function_calls_started")
         async def on_function_calls_started(service, function_calls):
-            await tts.queue_frame(TTSSpeakFrame("Let me check on that."))
+            if self.config.bot.language == "DE":
+                phrase = "Einen Moment bitte, ich schaue das mal nach."
+            else:
+                phrase = "One moment please, let me look that up."
+            await tts.queue_frame(TTSSpeakFrame(phrase))
 
         # Load existing context or create new one
         if self.resume_session_id:
@@ -134,6 +138,7 @@ class SimpleBot:
                 llm,
                 tts,
                 transport.output(),
+                # TODO: Expose audio recording via config instead of commenting out.
                 # audiobuffer,
                 transcript.assistant(),
                 self.context_aggregator.assistant(),

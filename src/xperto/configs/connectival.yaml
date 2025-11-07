@@ -13,9 +13,9 @@ prompts:
   intro: "src/xperto/prompts/connectival_intro_DE.md"
 
 paths:
-  recordings: "~/.xperto/recordings"
-  transcripts: "~/.xperto/transcripts"
-  contexts: "~/.xperto/contexts"
+  recordings: "outputs/recordings"
+  transcripts: "outputs/transcripts"
+  contexts: "outputs/contexts"
 
 services:
   stt:
