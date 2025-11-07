@@ -13,5 +13,4 @@ wheels/
 .venv
 
 # Bot Outputs
-recordings/
-transcripts/
+outputs

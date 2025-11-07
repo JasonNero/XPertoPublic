@@ -17,14 +17,18 @@ Based on [Pipecat](https://www.github.com/pipecat-ai/pipecat), powered by Daily.
 ### WSL2 Setup
 
 1. **Windows**: install Pulse Audio using the "Full Installer" from this URL: https://pgaskin.net/pulseaudio-win32/
-2. **WSL**: run `sudo apt install build-essential libasound2-plugins portaudio19-dev libportaudio2` to install the required libraries
+    - Make sure to allow the app through the firewall when prompted during installation!
+2. **WSL**: run `sudo apt install build-essential libasound2-plugins portaudio19-dev libportaudio2 pulseaudio-utils` to install the required libraries
 3. **WSL**: configure the pulse audio server by appending the following lines to your `~/.bashrc` file e.g. by running `code ~/.bashrc`:
     ```bash
     export HOST_IP="$(ip route |awk '/^default/{print $3}')"
     export PULSE_SERVER="tcp:$HOST_IP"
     ```
 4. **WSL**: Restart your WSL terminal or run `source ~/.bashrc`
-5. **WSL**: Test the audio setup by running `pactl list sources short`, you should see at least two audio devices listed. If no audio devices are found, restart the Pulse Audio service on Windows (or reboot your PC) and try again.
+5. **WSL**: Test the audio setup by running `pactl list sources short`, you should see at least two audio devices listed. 
+    - If no audio devices are found, restart the Pulse Audio service on Windows (or reboot your PC) and try again.
+    - If only "RDP" devices are shown, make sure that your changes to the `~/.bashrc` file have been saved and restart your terminal.
+    - If the connection has been refused, make sure that the firewall rule for "Pulse Audio (TCP-In)" is enabled in Windows Defender Firewall settings and you are connected to a private network (or have enabled the rule for public networks as well).
 
 It might be necessary to allow microphone access to the terminal app in Windows Settings:
 - Open **Settings** > **Privacy & security** > **Microphone**
