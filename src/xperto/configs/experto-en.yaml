@@ -7,6 +7,8 @@ bot:
     - "Expert"
   idle_timeout_secs: 1800
   keepalive_timeout_secs: 30
+  audio_recording: false
+  tui: true
 
 prompts:
   persona: "src/xperto/prompts/Experto_EN.md"

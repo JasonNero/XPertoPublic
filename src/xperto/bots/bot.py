@@ -24,7 +24,6 @@ from pipecat.services.stt_service import STTService
 from pipecat.services.tts_service import TTSService
 from pipecat.transports.base_transport import BaseTransport
 from pipecat.transports.local.audio import LocalAudioTransport
-from pipecat_tail.runner import TailRunner
 
 from ..config import APIKeysConfig, AppConfig
 from ..utils.audiobuffer_handler import AudioBufferHandler
@@ -59,7 +58,7 @@ class SimpleBot:
         self.session_metadata: Optional[dict] = None
 
     async def run(self, transport: BaseTransport) -> None:
-        audiobuffer = AudioBufferProcessor()
+        self.audiobuffer = AudioBufferProcessor()
         audiobuffer_handler = AudioBufferHandler(
             output_folder=Path(self.config.paths.recordings),
             output_name=Path(__file__).stem,
@@ -138,8 +137,7 @@ class SimpleBot:
                 llm,
                 tts,
                 transport.output(),
-                # TODO: Expose audio recording via config instead of commenting out.
-                # audiobuffer,
+                self.audiobuffer,
                 transcript.assistant(),
                 self.context_aggregator.assistant(),
                 self.context_saver,
@@ -158,12 +156,16 @@ class SimpleBot:
             ),
         )
 
-        audiobuffer.add_event_handler(
+        # Combined user and assistant audio.
+        self.audiobuffer.add_event_handler(
             "on_audio_data", audiobuffer_handler.on_audio_data
         )
-        audiobuffer.add_event_handler(
-            "on_track_audio_data", audiobuffer_handler.on_track_audio_data
-        )
+
+        # Separate files for user and assistant audio.
+        # This could help normalizing audio levels later on.
+        # audiobuffer.add_event_handler(
+        #     "on_track_audio_data", audiobuffer_handler.on_track_audio_data
+        # )
 
         @transcript.event_handler("on_transcript_update")
         async def on_transcript_update(processor, frame):
@@ -180,7 +182,12 @@ class SimpleBot:
         if isinstance(transport, LocalAudioTransport):
             await on_participant_joined(transport, {"id": "0"})
 
-        runner = TailRunner()
+        if self.config.bot.tui:
+            from pipecat_tail.runner import TailRunner as Runner
+        else:
+            from pipecat.pipeline.runner import PipelineRunner as Runner
+
+        runner = Runner()
         await runner.run(self.task)
 
     def _create_stt_service(self) -> STTService:
@@ -259,6 +266,9 @@ class SimpleBot:
         """Reset the context and send startup message (unless resuming)"""
         logger.info(f"Participant {participant} joined the call.")
         await self.transcript_handler.handle_participant_joined(participant["id"])
+        if self.config.bot.audio_recording:
+            logger.info("Audio recording started.")
+            await self.audiobuffer.start_recording()
 
         # Only reset context if we're not resuming an existing session
         if not self.resume_session_id or not self.session_metadata:

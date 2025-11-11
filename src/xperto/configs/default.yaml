@@ -11,6 +11,10 @@ bot:
   idle_timeout_secs: 1800
   # Timeout for transitioning from wake to sleep
   keepalive_timeout_secs: 30
+  # Set to "true" to enable audio recording
+  audio_recording: false
+  # Terminal UI
+  tui: true
 
 prompts:
   persona: "src/xperto/prompts/Experto_DE.md"  # The persona of the bot.

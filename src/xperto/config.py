@@ -10,6 +10,8 @@ class BotConfig(BaseSettings):
     assistant_names: List[str] = ["Experto", "Experte", "Expertin", "Expert"]
     idle_timeout_secs: int = 1800
     keepalive_timeout_secs: float = 30
+    audio_recording: bool = False
+    tui: bool = False
 
 
 class PromptsConfig(BaseSettings):

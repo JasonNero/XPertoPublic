@@ -76,7 +76,6 @@ class WakeCheckBuffer(FrameProcessor):
 
                 # Incrementally add new frame text to combined text
                 if self._combined_text:
-                    # TODO: Is this the cause for the weird spacing in the transcripts?
                     self._combined_text += " " + frame.text
                 else:
                     self._combined_text = frame.text
