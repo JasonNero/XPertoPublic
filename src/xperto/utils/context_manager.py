@@ -100,7 +100,9 @@ class ConversationContextManager:
             # Clear existing messages and extend with loaded messages
             context.messages.clear()
             context.messages.extend(context_data["messages"])
-            context.tools = context_data.get("tools", [])
+            tools = context_data.get("tools", [])
+            if tools:
+                context.set_tools(tools)
 
             # Extract metadata
             metadata = {
