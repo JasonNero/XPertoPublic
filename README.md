@@ -100,6 +100,12 @@ bot:
   # Timeout for transitioning from wake to sleep state (default: 30)
   keepalive_timeout_secs: 30
 
+  # Set to "true" to enable audio recording
+  audio_recording: false
+  
+  # Terminal UI
+  tui: true
+
 prompts:
   # Path to the persona/system prompt file
   persona: "src/xperto/prompts/my_bot_persona.md"
